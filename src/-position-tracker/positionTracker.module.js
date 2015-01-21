@@ -11,7 +11,57 @@
       });
 
   // Modules
-  angular.module('positionTracker.services', []);
+  var PositionTrackerService = function($rootScope, $window, $location){
+
+    var options = {
+      storage: sessionStorage
+    };
+    var urlRegExps = [];
+    var shouldRegisterPageChangeCallback = true;
+    var isMatchToRegExpList = function(str){
+      for(var regExp in urlRegExps){
+        if(str.search(regExp) > -1) return true
+      }
+      return false;
+    };
+
+    var setPosition = function(params){
+        if(angular.isUndefined(params.y) ||
+           angular.isUndefined(params.url))
+          throw "y and url should be defined as parameter of setPosition method";
+
+        options.storage[params.url + "_scoll_position"] = JSON.stringify({xPosition: params.x, yPosition: params.y});
+    };
+
+    var registerUrlExp = function(regexp){
+        urlRegExps.push(regexp);
+        if(shouldRegisterPageChangeCallback){
+          $rootScope.$on('$locationChangeSuccess',function(object, newLocation, oldLocation) {
+              if(isMatchToRegExpList(oldLocation)){
+                setPosition({
+                    y: $window.scrollY,
+                    url: oldLocation
+                })
+                shouldRegisterPageChangeCallback = false;
+              }
+          });
+        }
+    };
+
+    var config = function(params){
+        angular.extend(options, params);
+    }
+
+    return {
+        registerUrlExp: function(params){registerUrlExp(params); return this;},
+        setPosition: setPosition,
+        config: config,
+    }
+  };
+
+  angular.module('positionTracker.services', []).
+      factory('positionTrackerService', ['$rootScope', '$window', '$location', PositionTrackerService]);
+
   angular.module('positionTracker',
       [
           'positionTracker.config',
