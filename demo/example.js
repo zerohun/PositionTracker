@@ -27,7 +27,9 @@ app.config(['$routeProvider', '$locationProvider',
   }
 ]);
 app.run(['$rootScope', 'positionTrackerService', function($rootScope, positionTrackerService){
-  positionTrackerService.registerUrlExp(/.+/);
+  positionTrackerService.
+      registerUrlExp(/first/).
+      registerUrlExp(/second/)
 }]);
 
 app.controller('firstCtrl', [ 

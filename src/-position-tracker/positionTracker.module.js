@@ -19,8 +19,10 @@
     var urlRegExps = [];
     var shouldRegisterPageChangeCallback = true;
     var isMatchToRegExpList = function(str){
-      for(var regExp in urlRegExps){
-        if(str.search(regExp) > -1) return true
+      for(var i=0; i < urlRegExps.length; i++){
+        if(str.search(urlRegExps[i]) > -1) { 
+          return true;
+        }
       }
       return false;
     };
