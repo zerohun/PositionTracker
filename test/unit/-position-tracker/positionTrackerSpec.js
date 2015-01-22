@@ -1,8 +1,23 @@
 'use strict';
 
 describe('', function() {
-  var rootScope;
   beforeEach(module("positionTracker"));
+  beforeEach(module(function($provide){
+    var callbacks = [];
+    $provide.value('$rootScope', {
+      $watch: function(){
+      },
+      $on: function(event, callbackFunc){
+        callbacks.push({event: event, func: callbackFunc});
+      },
+      $emit: function(event, args1, args2, args3, args4){
+        angular.forEach(callbacks, function(callback){
+          if(callback.event == event) callback.func(args1, args2, args3, args4);
+        });
+      }
+    });
+  }));
+
 
   it('should be able to load the service', inject(function(positionTrackerService){
     expect(positionTrackerService).toBeDefined();
@@ -19,10 +34,21 @@ describe('', function() {
   }))
 
 
-  /*
   it("should automatically set position", inject(function(positionTrackerService, $rootScope){
+    positionTrackerService.
+      registerUrlExp(/save_.+/)
+
+    $rootScope.$emit("$locationChangeSuccess", {}, 'save_first', 'save_second');
+    $rootScope.$emit("$locationChangeSuccess", {}, 'save_second', 'dont_third');
+    $rootScope.$emit("$locationChangeSuccess", {}, 'dont_third', 'save_first');
+    var firstPosition = sessionStorage['save_first_scoll_position'];
+    var secondPosition = sessionStorage['save_second_scoll_position'];
+    var thirdPosition = sessionStorage['dont_third_scoll_position'];
+
+    expect(firstPosition).toEqual('{"yPosition":0}');
+    expect(secondPosition).toEqual('{"yPosition":0}');
+    expect(thirdPosition).toBeUndefined();
   }));
- */
 
 
 });
