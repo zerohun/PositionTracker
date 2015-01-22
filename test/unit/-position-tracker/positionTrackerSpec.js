@@ -1,28 +1,28 @@
 'use strict';
 
 describe('', function() {
+  var rootScope;
+  beforeEach(module("positionTracker"));
 
-  var module;
-  var dependencies;
-  dependencies = [];
+  it('should be able to load the service', inject(function(positionTrackerService){
+    expect(positionTrackerService).toBeDefined();
+  }));
 
-  var hasModule = function(module) {
-    return dependencies.indexOf(module) >= 0;
-  };
+  it("should be able to setPosition",inject(function(positionTrackerService){
+    positionTrackerService.setPosition({
+      x:0,
+      y:100,
+      url:"first"
+    });
+    var savedPosition = (sessionStorage["first_scoll_position"]);
+    expect(savedPosition).toEqual('{"xPosition":0,"yPosition":100}');
+  }))
 
-  beforeEach(function() {
-    // Get module
-    module = angular.module('positionTracker');
-    dependencies = module.requires;
-  });
 
-  it('should load config module', function() {
-    expect(hasModule('positionTracker.config')).to.be.ok;
-  });
+  /*
+  it("should automatically set position", inject(function(positionTrackerService, $rootScope){
+  }));
+ */
 
-   it('should load services module', function() {
-    expect(hasModule('positionTracker.services')).to.be.ok;
-  });
-  
 
 });
