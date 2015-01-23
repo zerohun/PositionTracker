@@ -11,7 +11,7 @@ Basic usage is as follows:
 
 
 Once you register regular expression of url, when you leave the page,
-it will save scroll position of the page that has url matchs the regular expression.
+it will save scroll position of the page that has url that matches the regular expression.
 
 ```javascript
   app.run(['positionTrackerService', function(positionTrackerService){
@@ -29,7 +29,7 @@ positionTrackerService.setPosition(x:1, y:1000, url:'/first'}
 }]);
 ```
 
-You can also customize where scroll position data going to be storedd
+You can also customize where scroll position data going to be stored
 ```javascript
 positionTrackerService.config({storage:localStorage})//sessionStorage is default
 ```
